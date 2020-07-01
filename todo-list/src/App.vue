@@ -6,18 +6,21 @@
         <router-view></router-view>
       </keep-alive>
     </transition>
+    <bottom-footer></bottom-footer>
   </div>
 </template>
 <script>
 import Header from './components/Header';
+import Footer from './components/Footer';
 export default {
   components: {
-    'nav-header': Header
+    'nav-header': Header,
+    'bottom-footer': Footer
   }
 }
 </script>
 <style>
-
+@import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
 .component-fade-enter-active, .component-fade-leave-active {
   transition: opacity 0.3s ease;
 }

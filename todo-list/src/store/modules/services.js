@@ -58,6 +58,10 @@ export default {
             for(let key of state.listTask) {
                 if(args.id == key.id) {
                     key.completed = args.checked;
+                    for(let item of key.tasks) {
+                        item.completed = false;
+                        item.functional = false;
+                    }
                 }
             }
         },

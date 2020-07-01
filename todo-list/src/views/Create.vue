@@ -1,80 +1,82 @@
 <template>
- <div class="container main-create" @keyup.enter="createList()">
-     <div class="row">
-        <div class="col-sm-12 col-md-12 col-lg-12 mb-3">
-            <h2 class="m-3">Create your own ToDo List !</h2>
-        </div>
-        <div class="col-sm-12 col-md-12 col-lg-12">
-            <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                    <span class="input-group-text" id="input-name">Todo List Name</span>
-                </div>
-                <input type="text" class="form-control" aria-label="Default" aria-describedby="input-name" v-model="nameList">
-            </div>
+<div class="main">
+        <div class="container main-create" @keyup.enter="createList()">
             <div class="row">
-                <div class="col-sm-4 col-md-4 col-lg-4">
-                    <select class="form-control form-control-sm mb-3" name="year" id="year" @change="selectValue()" v-model="chooseDate.year">
-                        <option disabled value="">Select year</option>
-                        <option v-for="year in years" :key="year.id" :value="year">
-                            {{ year }}
-                        </option>
-                    </select>
+                <div class="col-sm-12 col-md-12 col-lg-12 mb-3">
+                    <h2 class="m-3">Create your own ToDo List !</h2>
                 </div>
-                <div class="col-sm-4 col-md-4 col-lg-4">
-                    <select class="form-control form-control-sm mb-3" name="month" id="month" @change="selectValue()" v-model="chooseDate.month">
-                        <option disabled value="">Select month</option>
-                        <option v-for="(month, id) in months" :key="month.id" :value="id">
-                            {{ month }}
-                        </option>
-                    </select>
+                <div class="col-sm-12 col-md-12 col-lg-12">
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="input-name">Todo List Name</span>
+                        </div>
+                        <input type="text" class="form-control" aria-label="Default" aria-describedby="input-name" v-model="nameList">
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4 col-md-4 col-lg-4">
+                            <select class="form-control form-control-sm mb-3" name="year" id="year" @change="selectValue()" v-model="chooseDate.year">
+                                <option disabled value="">Select year</option>
+                                <option v-for="year in years" :key="year.id" :value="year">
+                                    {{ year }}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-sm-4 col-md-4 col-lg-4">
+                            <select class="form-control form-control-sm mb-3" name="month" id="month" @change="selectValue()" v-model="chooseDate.month">
+                                <option disabled value="">Select month</option>
+                                <option v-for="(month, id) in months" :key="month.id" :value="id">
+                                    {{ month }}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-sm-4 col-md-4 col-lg-4">
+                            <select class="form-control form-control-sm mb-3" name="day" id="day" v-model="chooseDate.day">
+                                <option disabled value="">Select day</option>
+                                <option v-for="day in days" :key="day.id" :value="day">
+                                    {{ day }}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12 col-md-12 col-lg-12" ref="tasks">
+                            <h4 class="text-center">Tasks</h4>
+                            <input type="text" class="form-control form-control-sm mb-3" placeholder="ToDo List Task - 1" :style="{ background: taskColor }">
+                            <div class="added-list" ref="taskField"></div>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-sm-4 col-md-4 col-lg-4">
-                    <select class="form-control form-control-sm mb-3" name="day" id="day" v-model="chooseDate.day">
-                        <option disabled value="">Select day</option>
-                        <option v-for="day in days" :key="day.id" :value="day">
-                            {{ day }}
-                        </option>
-                    </select>
+                <div class="container">
+                    <div class="row m-0">
+                        <div class="col-sm-6 col-md-6 col-lg-6 offset-5 color-choice">
+                            <label for="color">Set Tasks Color: </label>
+                            <input type="color" class="form-control form-control-sm" value="#ffffff" v-model="taskColor" @change="setTaskBgColor()">
+                        </div>
+                        <div class="col-sm-6 col-md-6 col-lg-6">
+                            <a href="#" class="remove-task" @click.prevent="removeLastTask()" title="Remove"> 
+                                <span class="custom-icon"> - </span>
+                            Remove last task</a>
+                        </div>
+                        <div class="col-sm-6 col-md-6 col-lg-6">
+                        <a href="#" class="add-task" @click.prevent="addTask()" title="Add"> 
+                                <span class="custom-icon"> + </span>
+                            Add new task </a>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12 col-md-12 col-lg-12" ref="tasks">
-                    <h4 class="text-center">Tasks</h4>
-                    <input type="text" class="form-control form-control-sm mb-3" placeholder="ToDo List Task - 1" :style="{ background: taskColor }">
-                    <div class="added-list" ref="taskField"></div>
+                <div class="col-sm-12 col-md-12 col-lg-12">
+                    <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+                        <div class="btn-group m-3" role="group" aria-label="Third group">
+                            <button type="button" class="btn btn-danger" @click="clearInputs()">Clear all Inputs</button>
+                        </div>
+                        <div class="btn-group m-3" role="group" aria-label="Third group">
+                            <button type="submit" class="btn btn-primary" @click="createList()">Create ToDo List</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="container">
-            <div class="row m-0">
-                <div class="col-sm-6 col-md-6 col-lg-6 offset-5 color-choice">
-                    <label for="color">Set Tasks Color: </label>
-                    <input type="color" class="form-control form-control-sm" value="#ffffff" v-model="taskColor" @change="setTaskBgColor()">
-                </div>
-                <div class="col-sm-6 col-md-6 col-lg-6">
-                    <a href="#" class="remove-task" @click.prevent="removeLastTask()" title="Remove"> 
-                        <span class="custom-icon"> - </span>
-                    Remove last task</a>
-                </div>
-                <div class="col-sm-6 col-md-6 col-lg-6">
-                <a href="#" class="add-task" @click.prevent="addTask()" title="Add"> 
-                        <span class="custom-icon"> + </span>
-                    Add new task </a>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-12 col-md-12 col-lg-12">
-            <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
-                <div class="btn-group m-3" role="group" aria-label="Third group">
-                    <button type="button" class="btn btn-danger" @click="clearInputs()">Clear all Inputs</button>
-                </div>
-                <div class="btn-group m-3" role="group" aria-label="Third group">
-                    <button type="submit" class="btn btn-primary" @click="createList()">Create ToDo List</button>
-                </div>
-            </div>
-        </div>
-     </div>
- </div>
+    </div>
 </template>
 
 <script>
@@ -195,7 +197,11 @@ export default {
 </script>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
+.main {
+  width: 100%;
+  height: calc(100vh - 109.5px);
+  overflow: auto;
+}
 .main-create {
     width: 100%;
     margin: 1% auto;

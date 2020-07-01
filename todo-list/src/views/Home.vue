@@ -1,70 +1,72 @@
 <template>
-  <div class="container main-home">
-    <div class="modal fade">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-              <h5 class="modal-title">Confirmation</h5>
-          </div>
-          <div class="modal-body">
-            <h4 class="text-center">Are you sure ?</h4>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" @click="back()">Close</button>
-            <button type="button" class="btn btn-primary" ref="confirm" @click="doAction()">Yes</button>
+  <div class="main">
+    <div class="container main-home">
+      <div class="modal fade">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirmation</h5>
+            </div>
+            <div class="modal-body">
+              <h4 class="text-center">Are you sure ?</h4>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" @click="back()">Close</button>
+              <button type="button" class="btn btn-primary" ref="confirm" @click="doAction()">Yes</button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <div class="row">
-      <div class="col-sm-12 col-md-12 col-lg-12">
-        <h2 class="text-center mt-2 mb-2">ToDo List</h2>
-        <div class="col-sm-10 col-md-10 col-lg-10 offset-1 mb-2 p-0">
-          <ul class="list-group" ref="todos">
-            <li class="list-group-item" v-for="(todo, indexTodo) in listOfTasks" :key="todo.id">
-              <div :class="{ overlay: todo.completed }">
-                <span v-if="todo.completed">Completed</span>
-              </div>
-              <h3 class="text-center m-2">{{ todo.name | capitalize }}</h3>
-              <div class="form-check form-check-inline done-checkbox">
-                <input class="form-check-input" type="checkbox" id="done" value="done" @change="completedTodo(todo.id)">
-                <label class="form-check-label" for="done">Complete</label>
-              </div>
-              <div class="todo-time"> {{ todo.dates }}</div>
-              <div class="rewrite">
-                <span class="adding-options" @click="setAdding(todo.id)" title="Add"></span>
-                <span class="delete-options" @click="showModal(indexTodo, 'delete-todo')" title="Delete"></span>
-              </div>
-              <ul class="custom-list">
-                <li class="custom-list-item" v-for="(task, indexTask) in todo.tasks" :key="task.id" :style="{background: todo.taskBg}">
-                  <div :class="{ 'overlay-task': task.completed }">
-                    <span v-if="task.completed">Completed</span>
-                  </div>
-                  <div class="form-check form-check-inline check-list-checkbox">
-                    <input class="form-check-input task-check" type="checkbox" id="task" value="task" title="Check Task" @change="getFunctional(task.id)">
-                  </div>
-                  <div class="todo-item" v-if="!task.editting">
-                    {{ '-  ' + task.task }}
-                  </div>
-                  <div class="editting-area" v-else>
-                    <input type="text" class="todo-item-edit" v-model="task.task"/>
-                    <span class="save-task" title="Save" @click="saveEdittedTask(task.id)"></span>
-                    <span class="cancel" title="Cancel" @click="showModal(task.id, 'cancel-edit')"></span>
-                  </div>
-                  <div class="variable-action" v-show="task.functional">
-                    <span class="editting-task" @click="editTask(task)" title="Edit"></span>
-                    <span class="deleting-task" @click="showModal(indexTask, 'delete-task')" title="Delete"></span>
-                    <span class="complete-task"  @click="taskComplete(task.id)" title="Complete"></span>
-                  </div>
-                </li>
-              </ul>
-              <div class="adding-area" v-if="todo.adding">
-                <input type="text" class="todo-item-add" v-model.lazy="newTask">
-                <span class="save-task" title="Save" @click="addAndSaveTask(todo.id)"></span>
-                <span class="cancel" title="Cancel" @click="cancelAdding(todo.id)"></span>
-              </div>
-            </li>
-          </ul>
+      <div class="row">
+        <div class="col-sm-12 col-md-12 col-lg-12">
+          <h2 class="text-center mt-2 mb-2">ToDo List</h2>
+          <div class="col-sm-10 col-md-10 col-lg-10 offset-1 mb-2 p-0">
+            <ul class="list-group" ref="todos">
+              <li class="list-group-item" v-for="(todo, indexTodo) in listOfTasks" :key="todo.id">
+                <div :class="{ overlay: todo.completed }">
+                  <span v-if="todo.completed">Completed</span>
+                </div>
+                <h3 class="text-center m-2">{{ todo.name | capitalize }}</h3>
+                <div class="form-check form-check-inline done-checkbox">
+                  <input class="form-check-input" type="checkbox" id="done" @change="completedTodo(todo.id)">
+                  <label class="form-check-label" for="done">Complete</label>
+                </div>
+                <div class="todo-time"> {{ todo.dates }}</div>
+                <div class="rewrite">
+                  <span class="adding-options" @click="setAdding(todo.id)" title="Add"></span>
+                  <span class="delete-options" @click="showModal(indexTodo, 'delete-todo')" title="Delete"></span>
+                </div>
+                <ul class="custom-list">
+                  <li class="custom-list-item" v-for="(task, indexTask) in todo.tasks" :key="task.id" :style="{background: todo.taskBg}">
+                    <div :class="{ 'overlay-task': task.completed }">
+                      <span v-if="task.completed">Completed</span>
+                    </div>
+                    <div class="form-check form-check-inline check-list-checkbox">
+                      <input class="form-check-input task-check" type="checkbox" :data-id="todo.id" ref="funcCheck" title="Check Task" @change="getFunctional(task.id)">
+                    </div>
+                    <div class="todo-item" v-if="!task.editting">
+                      {{ '-  ' + task.task }}
+                    </div>
+                    <div class="editting-area" v-else>
+                      <input type="text" class="todo-item-edit" v-model="task.task"/>
+                      <span class="save-task" title="Save" @click="saveEdittedTask(task.id)"></span>
+                      <span class="cancel" title="Cancel" @click="showModal(task.id, 'cancel-edit')"></span>
+                    </div>
+                    <div class="variable-action" v-show="task.functional">
+                      <span class="editting-task" @click="editTask(task)" title="Edit"></span>
+                      <span class="deleting-task" @click="showModal(indexTask, 'delete-task')" title="Delete"></span>
+                      <span class="complete-task"  @click="taskComplete(task.id)" title="Complete"></span>
+                    </div>
+                  </li>
+                </ul>
+                <div class="adding-area" v-if="todo.adding">
+                  <input type="text" class="todo-item-add" v-model.lazy="newTask">
+                  <span class="save-task" title="Save" @click="addAndSaveTask(todo.id)"></span>
+                  <span class="cancel" title="Cancel" @click="cancelAdding(todo.id)"></span>
+                </div>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>
@@ -115,6 +117,11 @@ export default {
       }
     },
     completedTodo(id) {
+      this.$refs.funcCheck.forEach( el => {
+        if(el.dataset.id == id) {
+          el.checked = false;
+        }
+      });
       this.$store.dispatch("completedTodo", { checked: event.target.checked, id: id});
     },
     getFunctional(id) {
@@ -174,6 +181,11 @@ export default {
 </script>
 
 <style scoped>
+.main {
+  width: 100%;
+  height: calc(100vh - 109.5px);
+  overflow: auto;
+}
 .main-home {
   width: 100%;
   margin: 1% auto;
@@ -252,7 +264,6 @@ export default {
   color: #ffffff23;
 
 }
-
 .custom-list {
   list-style: none;
   width: 100%;
@@ -262,7 +273,8 @@ export default {
 .custom-list-item {
   position: relative;
   display: flex;
-  flex-flow: row wrap;
+  flex-flow: row nowrap;
+  align-items: center;
   border: 1px solid #ccc;
   border-radius: 4px;
   padding: 6px 12px;
@@ -302,6 +314,8 @@ export default {
 .variable-action {
   width: 80px;
   right: 10px;
+  top: 50%;
+  transform: translate(0, -50%);
 }
 .delete-options, .adding-options, .editting-task, .deleting-task, .complete-task, .save-task, .cancel {
   background-image: url("https://cdn0.iconfinder.com/data/icons/app-user-interface-5/48/trash-512.png");
@@ -346,6 +360,11 @@ export default {
 .adding-area {
   width: 90%;
   margin-top: 1%;
+}
+.todo-item {
+  width: 86%;
+  word-wrap: break-word;
+  hyphens: none;
 }
 .todo-item-edit, .todo-item-add {
   width: 90%;
